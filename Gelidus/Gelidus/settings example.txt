@@ -1,0 +1,10 @@
+Copy this file to the binary output directory (where "Gelidus.exe" is located); you'll also need  to rename this file to "settings.txt".
+
+Bot1 email:some-email@live.com
+Bot1 password:pa55w0d
+
+Bot2 email:another-email@outlook.com
+Bot2 password:another-pwd
+
+Interval: 10
+Room url:http://chat.stackoverflow.com/rooms/68414/cvchatbot-testing
