@@ -1,0 +1,3 @@
+[submodule "ChatterBotApi"]
+	path = ChatterBotApi
+	url = https://github.com/Schumix/ChatterBotApi
