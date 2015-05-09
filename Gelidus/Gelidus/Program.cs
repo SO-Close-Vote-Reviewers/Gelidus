@@ -1,6 +1,6 @@
 ﻿/*
  * Gelidus. .Net based anti-freeze bot for SE chat rooms.
- * Copyright © 2015, ArcticEcho.
+ * Copyright © 2015, SO-Close-Vote-Reviewers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
