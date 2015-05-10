@@ -36,7 +36,6 @@ namespace Gelidus
 {
     class Program
     {
-        private static readonly int[] owners = new int[] { 1043380, 578411, 2246344 }; // gunr2171, rene, Sam
         private static readonly Regex spamMessages = new Regex(@"(?i)\bapp\b|\.com|clever\w+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private static readonly ChatterBotFactory factory = new ChatterBotFactory();
         private static readonly ChatterBot bot = factory.Create(ChatterBotType.CLEVERBOT);
@@ -44,11 +43,13 @@ namespace Gelidus
         private static readonly ManualResetEvent stopMre = new ManualResetEvent(false);
         private static readonly ManualResetEvent pauseMre = new ManualResetEvent(false);
         private static readonly ManualResetEvent convoLoopMre = new ManualResetEvent(false);
+        private static readonly List<int> owners = new List<int>();
         private static readonly Random random = new Random();
         private static Client chatClient1;
         private static Client chatClient2;
         private static Room bot1Room;
         private static Room bot2Room;
+        private static Message lastBotMessage;
         private static int intervalMilliseconds;
         private static bool shutdown;
         private static bool pause;
@@ -107,7 +108,7 @@ namespace Gelidus
                 var success = int.TryParse(new string(cmd.Where(Char.IsDigit).ToArray()), out interval);
                 if (success)
                 {
-                    interval = Math.Max(10, interval * 1000);
+                    intervalMilliseconds = Math.Max(10, interval * 1000);
                     return true;
                 }
             }
@@ -116,6 +117,7 @@ namespace Gelidus
             {
                 case "PAUSE":
                 {
+                    pauseMre.Reset();
                     pause = true;
                     return true;
                 }
@@ -141,8 +143,7 @@ namespace Gelidus
         private static void ConvoLoop()
         {
             convoLoopMre.WaitOne(intervalMilliseconds);
-            var lastBotMessage = bot2Room.MyMessages.Last();
-            Message msg;
+            //Message msg;
 
             while (!shutdown)
             {
@@ -153,13 +154,13 @@ namespace Gelidus
                     var thought = GetNonSpamMessage(lastBotMessage.Content);
                     if (lastBotMessage.AuthorID == bot1Room.Me.ID)
                     {
-                        msg = bot2Room.PostReply(lastBotMessage, thought);
+                        /*msg = */bot2Room.PostReply(lastBotMessage, thought);
                     }
                     else
                     {
-                        msg = bot1Room.PostReply(lastBotMessage, thought);
+                        /*msg =*/ bot1Room.PostReply(lastBotMessage, thought);
                     }
-                    if (msg != null) { lastBotMessage = msg; }
+                    //if (msg != null) { lastBotMessage = msg; }
                 }
                 catch (Exception ex)
                 {
@@ -211,6 +212,8 @@ namespace Gelidus
 
         private static void InitialiseBots()
         {
+            var ids = SettingsReader("owner ids").Split(',').Where(x => !String.IsNullOrEmpty(x));
+            foreach (var id in ids) { owners.Add(int.Parse(id)); }
             var roomToJoin = SettingsReader("room url");
 
             bot1Room = chatClient1.JoinRoom(roomToJoin);
@@ -226,6 +229,15 @@ namespace Gelidus
             bot2Room.PostMessage("Hey.");
 
             intervalMilliseconds = Math.Max(10, int.Parse(SettingsReader("Interval")) * 1000);
+            bot1Room.IgnoreOwnEvents = false;
+            bot1Room.EventManager.ConnectListener(EventType.MessagePosted, new Action<Message>(m =>
+            {
+                if (m.AuthorID == bot1Room.Me.ID || m.AuthorID == bot2Room.Me.ID)
+                {
+                    lastBotMessage = m;
+                }
+            }));
+            lastBotMessage = bot2Room.MyMessages.Last();
         }
 
         private static string SettingsReader(string field)

@@ -6,5 +6,6 @@ Bot1 password:pa55w0d
 Bot2 email:another-email@outlook.com
 Bot2 password:another-pwd
 
+Owner IDs: 1043380, 578411, 2246344, 2619912, 3622940
 Interval: 30
 Room url:http://chat.stackoverflow.com/rooms/68414/cvchatbot-testing
