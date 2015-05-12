@@ -1,7 +1,7 @@
 Gelidus [![Build Status](https://travis-ci.org/SO-Close-Vote-Reviewers/Gelidus.svg?branch=master)](https://travis-ci.org/SO-Close-Vote-Reviewers/Gelidus)
 =====
 
-.Net<sup>*</sup> based anti-freeze bot for SE chat rooms.
+.Net<sup>*</sup> based anti-freeze chatbot for SE chat rooms.
 
 > **3 days later...**  
 > Sam: Sorry, just had to get a message from someone else to stop it from freezing. ;)  
