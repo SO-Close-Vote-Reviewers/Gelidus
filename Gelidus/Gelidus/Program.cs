@@ -114,11 +114,11 @@ namespace Gelidus
             string message = null;
             try
             {
-                message = botSessions[botID].Think(source);
+                message = WebUtility.HtmlDecode(botSessions[botID].Think(source));
 
                 while (badMessages.IsMatch(message))
                 {
-                    message = botSessions[botID].Think(source);
+                    message = WebUtility.HtmlDecode(botSessions[botID].Think(source));
                 }
             }
             catch (Exception ex)
