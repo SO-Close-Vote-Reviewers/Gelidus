@@ -41,7 +41,7 @@ namespace Gelidus
         private static readonly Regex badMessages = new Regex(@"(?i)\bapp\b|\.com|clever\w+|kisses|groans|strokes", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private static readonly ChatterBotFactory factory = new ChatterBotFactory();
         private static readonly ChatterBot bot = factory.Create(ChatterBotType.CLEVERBOT);
-        private static readonly Dictionary<int, ChatterBotSession> botSessions = new Dictionary<int, ChatterBotSession>();//bot.CreateSession();
+        private static readonly Dictionary<int, ChatterBotSession> botSessions = new Dictionary<int, ChatterBotSession>();
         private static readonly Dictionary<int, Client> chatClients = new Dictionary<int, Client>();
         private static readonly Dictionary<int, Room> botRooms = new Dictionary<int, Room>();
         private static readonly ManualResetEvent stopMre = new ManualResetEvent(false);
@@ -89,15 +89,17 @@ namespace Gelidus
 
             try
             {
-                while (!shutdown)
+                while (true)
                 {
                     foreach (var kv in botRooms)
                     {
+                        convoLoopMre.WaitOne(intervalMilliseconds);
+
+                        if (shutdown) { return; }
                         if (pause) { pauseMre.WaitOne(); }
 
                         var thought = GetGoodMessage(kv.Key, lastBotMessage.Content);
-                        kv.Value.PostMessage(thought);
-                        convoLoopMre.WaitOne(intervalMilliseconds);
+                        kv.Value.PostReply(lastBotMessage, thought);
                     }
                 }
             }
@@ -152,10 +154,8 @@ namespace Gelidus
 
                 botSessions[botID] = bot.CreateSession();
                 chatClients[botID] = new Client(email, pwd);
-                Thread.Sleep(random.Next(1, 4000));
                 botRooms[botID] = chatClients[botID].JoinRoom(roomToJoin);
                 botRooms[botID].EventManager.ConnectListener(EventType.UserMentioned, new Action<Message>(m => HandleMention(botID, m)));
-                Thread.Sleep(random.Next(1, 4000));
                 botRooms[botID].PostMessage(startUpMessage);
             }
 
@@ -257,9 +257,7 @@ namespace Gelidus
             foreach (var kv in botRooms)
             {
                 var shutdownMessage = shutdownMessages[random.Next(0, shutdownMessages.Length)];
-                Thread.Sleep(random.Next(1, 4000));
                 kv.Value.PostMessage(shutdownMessage);
-                Thread.Sleep(random.Next(1, 4000));
                 kv.Value.Leave();
                 chatClients[kv.Key].Dispose();
             }
