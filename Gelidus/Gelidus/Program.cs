@@ -20,12 +20,11 @@
 
 
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,7 +67,7 @@ namespace Gelidus
             {
                 while (true)
                 {
-                    if (Char.ToLowerInvariant(Console.ReadKey(true).KeyChar) == 'q')
+                    if (char.ToLowerInvariant(Console.ReadKey(true).KeyChar) == 'q')
                     {
                         StopBot();
                         return;
@@ -114,11 +113,18 @@ namespace Gelidus
             string message = null;
             try
             {
-                message = WebUtility.HtmlDecode(botSessions[botID].Think(source));
-
-                while (badMessages.IsMatch(message))
+                while (true)
                 {
                     message = WebUtility.HtmlDecode(botSessions[botID].Think(source));
+
+                    if (badMessages.IsMatch(message))
+                    {
+                        Console.WriteLine("Skipped thought: " + message);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -156,7 +162,7 @@ namespace Gelidus
                 chatClients[botID] = new Client(email, pwd);
                 botRooms[botID] = chatClients[botID].JoinRoom(roomToJoin);
                 botRooms[botID].EventManager.ConnectListener(EventType.UserMentioned, new Action<Message>(m => HandleMention(botID, m)));
-                botRooms[botID].PostMessage(startUpMessage);
+                lastBotMessage = botRooms[botID].PostMessage(startUpMessage);
             }
 
             botRooms[0].IgnoreOwnEvents = false;
@@ -167,7 +173,6 @@ namespace Gelidus
                     lastBotMessage = m;
                 }
             }));
-            lastBotMessage = botRooms[botCount - 1].MyMessages.Last();
         }
 
         private static void HandleMention(int botID, Message m)
@@ -194,11 +199,12 @@ namespace Gelidus
             {
                 if (!owners.Contains(command.AuthorID)) { return false; }
                 var interval = 0;
-                var success = int.TryParse(new string(cmd.Where(Char.IsDigit).ToArray()), out interval);
+                var success = int.TryParse(new string(cmd.Where(char.IsDigit).ToArray()), out interval);
                 if (success)
                 {
                     intervalMilliseconds = Math.Max(10, interval * 1000);
                     convoLoopMre.Set();
+                    Thread.Sleep(100);
                     convoLoopMre.Reset();
                     Console.WriteLine("Interval updated to: " + intervalMilliseconds + " ms");
                     return true;

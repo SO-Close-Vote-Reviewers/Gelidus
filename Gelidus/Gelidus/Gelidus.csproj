@@ -33,16 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChatExchange.Net, Version=2.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ChatExchange.Net.2.1.8-beta\lib\ChatExchange.Net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="ChatExchange.Net, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ChatExchange.Net.2.2.3-beta\lib\ChatExchange.Net.dll</HintPath>
     </Reference>
     <Reference Include="CsQuery, Version=1.3.3.249, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CsQuery.1.3.4\lib\net40\CsQuery.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=4.0.40.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.40\lib\net40\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -66,13 +66,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="settings example.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\ChatterBotApi\dotnet\ChatterBotAPI\ChatterBotAPI.csproj">
       <Project>{2e624962-f155-432c-a90a-e1ce75dee9ea}</Project>
       <Name>ChatterBotAPI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="settings example.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
