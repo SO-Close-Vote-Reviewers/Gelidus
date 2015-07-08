@@ -1,0 +1,13 @@
+version: 1.0.{build}.0
+
+configuration: Release
+
+platform: Any CPU
+
+install:
+- git submodule update --init --recursive
+
+build:
+  project: Gelidus.sln
+  parallel: true
+  verbosity: minimal
