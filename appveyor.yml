@@ -8,7 +8,7 @@ install:
 - git submodule update --init --recursive
 
 before_build:
-- nuget restore
+- nuget restore ./Gelidus/Gelidus.sln
 
 build:
   project: ./Gelidus/Gelidus.sln
