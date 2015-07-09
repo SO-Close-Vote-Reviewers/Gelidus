@@ -1,4 +1,4 @@
-Gelidus [![Build Status](https://travis-ci.org/SO-Close-Vote-Reviewers/Gelidus.svg?branch=master)](https://travis-ci.org/SO-Close-Vote-Reviewers/Gelidus)
+Gelidus [![Build status](https://ci.appveyor.com/api/projects/status/r1f0b5y70w0pjuar/branch/master?svg=true)](https://ci.appveyor.com/project/ArcticEcho/gelidus/branch/master)
 =====
 
 .Net<sup>*</sup> based anti-freeze chatbot for SE chat rooms.
