@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gelidus", "Gelidus\Gelidus.csproj", "{3B096092-6550-4BBF-A467-92C716C43DC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatterBotAPI", "..\ChatterBotApi\dotnet\ChatterBotAPI\ChatterBotAPI.csproj", "{2E624962-F155-432C-A90A-E1CE75DEE9EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatterBotAPI", "..\chatter-bot-api\dotnet\ChatterBotAPI\ChatterBotAPI.csproj", "{2E624962-F155-432C-A90A-E1CE75DEE9EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

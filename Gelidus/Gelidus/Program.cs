@@ -35,9 +35,9 @@ namespace Gelidus
 {
     class Program
     {
-        private static readonly string[] startUpMessages = new string[] { "Hey", "Hiya", "Hi", "Hello", "And I'm back.", "*returns*", "Hey everyone", "'ello", "Greetings." };
-        private static readonly string[] shutdownMessages = new string[] { "Well, cya", "Gtg, bye!", "I'm outta here.", "I'm leaving...", "See you guys later.", "Gtg m8, cya l8r. Bbfn." };
-        private static readonly Regex badMessages = new Regex(@"(?i)\bapp\b|\.com|clever\w+|kisses|groans|strokes", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly string[] startUpMessages = new string[] { "Hey", "Hiya", "Hi", "Hello", "And I'm back.", "*returns*", "Hey everyone", "'ello", "Greetings.", "Yo", "Plop" };
+        private static readonly string[] shutdownMessages = new string[] { "Well, cya", "Gtg, bye!", "I'm outta here.", "I'm leaving...", "Night!", "See you guys later.", "Gtg m8, cya l8r. Bbfn." };
+        private static readonly Regex badMessages = new Regex(@"(?i)\bapp\b|\.com|clever\w+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private static readonly ChatterBotFactory factory = new ChatterBotFactory();
         private static readonly ChatterBot bot = factory.Create(ChatterBotType.CLEVERBOT);
         private static readonly Dictionary<int, ChatterBotSession> botSessions = new Dictionary<int, ChatterBotSession>();
@@ -161,14 +161,15 @@ namespace Gelidus
                 botSessions[botID] = bot.CreateSession();
                 chatClients[botID] = new Client(email, pwd);
                 botRooms[botID] = chatClients[botID].JoinRoom(roomToJoin);
+                botRooms[botID].InitialisePrimaryContentOnly = true;
                 botRooms[botID].EventManager.ConnectListener(EventType.UserMentioned, new Action<Message>(m => HandleMention(botID, m)));
                 lastBotMessage = botRooms[botID].PostMessage(startUpMessage);
             }
 
-            botRooms[0].IgnoreOwnEvents = false;
+            botRooms[0].EventManager.IgnoreOwnEvents = false;
             botRooms[0].EventManager.ConnectListener(EventType.MessagePosted, new Action<Message>(m =>
             {
-                if (botRooms.Any(kv => m.AuthorID == kv.Value.Me.ID))
+                if (botRooms.Any(kv => m.Author.ID == kv.Value.Me.ID))
                 {
                     lastBotMessage = m;
                 }
@@ -179,7 +180,7 @@ namespace Gelidus
         {
             try
             {
-                if (botRooms.Any(kv => m.AuthorID == kv.Value.Me.ID)) { return; }
+                if (botRooms.Any(kv => m.Author.ID == kv.Value.Me.ID)) { return; }
                 if (HandleChatCommand(botID, m)) { return; }
 
                 var thought = GetGoodMessage(botID, m.Content);
@@ -197,7 +198,7 @@ namespace Gelidus
 
             if (cmd.StartsWith("INTERVAL"))
             {
-                if (!owners.Contains(command.AuthorID)) { return false; }
+                if (!owners.Contains(command.Author.ID)) { return false; }
                 var interval = 0;
                 var success = int.TryParse(new string(cmd.Where(char.IsDigit).ToArray()), out interval);
                 if (success)
@@ -229,7 +230,7 @@ namespace Gelidus
                 }
                 case "STOP":
                 {
-                    if (!owners.Contains(command.AuthorID)) { return false; }
+                    if (!owners.Contains(command.Author.ID)) { return false; }
                     StopBot();
                     return true;
                 }
